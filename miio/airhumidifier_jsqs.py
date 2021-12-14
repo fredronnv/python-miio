@@ -25,7 +25,7 @@ _MAPPING = {
     "led_light": {"siid": 6, "piid": 1},  # bool
     # Other (siid=7)
     "water_shortage_fault": {"siid": 7, "piid": 1},  # bool
-    "tank_filed": {"siid": 7, "piid": 2},  # bool
+    "tank_filled": {"siid": 7, "piid": 2},  # bool
     "overwet_protect": {"siid": 7, "piid": 3},  # bool
 }
 
@@ -117,51 +117,42 @@ class AirHumidifierJsqsStatus(DeviceStatus):
     @property
     def buzzer(self) -> Optional[bool]:
         """Return True if buzzer is on."""
-        if self.data["buzzer"] is not None:
-            return self.data["buzzer"]
-        return None
+        return self.data.get("buzzer")
 
     # Indicator Light
 
     @property
     def led_light(self) -> Optional[bool]:
         """Return status of the LED."""
-
-        if self.data["led_light"] is not None:
-            return self.data["led_light"]
-        return None
+        return self.data.get("led_light")
 
     # Other
 
     @property
-    def tank_filed(self) -> Optional[bool]:
-        """Return the tank filed."""
-
-        if self.data["tank_filed"] is not None:
-            return self.data["tank_filed"]
-        return None
+    def tank_filled(self) -> Optional[bool]:
+        """Return the tank filled."""
+        return self.data.get("tank_filled")
 
     @property
     def water_shortage_fault(self) -> Optional[bool]:
         """Return water shortage fault."""
-
-        if self.data["water_shortage_fault"] is not None:
-            return self.data["water_shortage_fault"]
-        return None
+        return self.data.get("water_shortage_fault")
 
     @property
     def overwet_protect(self) -> Optional[bool]:
         """Return True if overwet mode is active."""
-
-        if self.data["overwet_protect"] is not None:
-            return self.data["overwet_protect"]
-        return None
+        return self.data.get("overwet_protect")
 
 
 class AirHumidifierJsqs(MiotDevice):
     """Main class representing the air humidifier which uses MIoT protocol."""
 
     mapping = _MAPPING
+
+    _supported_models = [
+        'deerma.humidifier.jsqs',
+        'deerma.humidifier.jsq5',
+    ]
 
     @command(
         default_output=format_output(
@@ -171,7 +162,7 @@ class AirHumidifierJsqs(MiotDevice):
             "Target Humidity: {result.target_humidity} %\n"
             "Relative Humidity: {result.relative_humidity} %\n"
             "Temperature: {result.temperature} °C\n"
-            "Water tank detached: {result.tank_filed}\n"
+            "Water tank detached: {result.tank_filled}\n"
             "Mode: {result.mode}\n"
             "LED light: {result.led_light}\n"
             "Buzzer: {result.buzzer}\n"
